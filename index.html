@@ -150,7 +150,7 @@
     <!-- Main Content Section -->
     <div class="main-content" id="mainContent">
         <h2>Stronghold Crusader HD Maps</h2>
-        <button class="stronghold-button" id="downloadButton">Click to Download</button>
+        <button class="stronghold-button" id="downloadButton">Download</button>
 
         <!-- Instructions Section -->
         <div class="instructions" id="instructions">
@@ -163,7 +163,6 @@
                 <li>Inside, go to the <b>maps</b> folder.</li>
                 <li>Finally, paste the downloaded maps here.</li>
             </ol>
-            <p>Download the maps from: <a href="https://drive.google.com/drive/folders/1phr5A1zWpMHo3BT1c3mmFLjMa97SL8JW?usp=sharing" target="_blank">Google Drive</a></p>
         </div>
     </div>
 
@@ -190,12 +189,9 @@
             document.getElementById('mainContent').style.display = 'block'; // Show main content
         }, 4000); // Delay for 4 seconds
 
-        // Auto-download when clicking the button
+        // Redirect to Google Drive folder when the button is clicked
         document.getElementById('downloadButton').addEventListener('click', function() {
-            const downloadLink = 'https://drive.google.com/uc?id=1phr5A1zWpMHo3BT1c3mmFLjMa97SL8JW&export=download';
-            
-            window.location.href = downloadLink;  // Trigger the download
-            document.getElementById('instructions').style.opacity = '1'; // Show the instructions
+            window.open('https://drive.google.com/drive/folders/1phr5A1zWpMHo3BT1c3mmFLjMa97SL8JW?usp=sharing', '_blank');
         });
     </script>
 </body>
