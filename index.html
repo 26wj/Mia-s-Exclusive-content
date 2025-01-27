@@ -2,396 +2,259 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ConnectHub Pro - Stable</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P2P Video Chat</title>
     <style>
         :root {
             --primary: #4CAF50;
             --secondary: #2196F3;
-            --background: #0a0a0a;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --background: #1a1a1a;
         }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             background: var(--background);
             color: white;
+            margin: 0;
+            padding: 20px;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* Video Containers */
         .video-container {
-            position: fixed;
-            width: 30vw;
-            height: 22vh;
-            min-width: 250px;
-            min-height: 180px;
-            border-radius: 15px;
+            position: relative;
+            width: 45%;
+            height: 40vh;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.4);
-            z-index: 1;
-        }
-
-        #localVideo {
-            top: 2vh;
-            left: 2vw;
-            border: 3px solid var(--primary);
-            transform: scaleX(-1);
-        }
-
-        #remoteVideo {
-            bottom: 2vh;
-            right: 2vw;
-            border: 3px solid var(--secondary);
+            display: inline-block;
+            margin: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
         }
 
         video {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transform: scaleX(-1);
         }
 
-        /* Chat Interface */
-        .chat-interface {
+        #remoteVideo {
+            border: 3px solid var(--secondary);
+        }
+
+        #localVideo {
+            border: 3px solid var(--primary);
+        }
+
+        .controls {
             position: fixed;
-            right: 0;
-            top: 0;
-            width: 350px;
-            height: 100vh;
-            background: rgba(20, 20, 20, 0.97);
-            backdrop-filter: blur(12px);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            border-left: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .chat-box {
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 15px;
-            padding: 10px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-        }
-
-        .message {
-            margin: 10px 0;
-            padding: 12px;
-            border-radius: 15px;
-            background: rgba(255,255,255,0.1);
-            animation: messagePop 0.3s ease-out;
-        }
-
-        @keyframes messagePop {
-            from { transform: translateX(20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        /* Input & Buttons */
-        .message-input {
-            display: flex;
-            gap: 10px;
-            position: relative;
-        }
-
-        input {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 25px;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            font-size: 16px;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
         }
 
         button {
-            padding: 12px 24px;
+            padding: 12px 25px;
             border: none;
             border-radius: 25px;
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 0 10px;
+            transition: transform 0.2s;
         }
 
         button:active {
             transform: scale(0.95);
         }
 
-        /* Login Screen */
-        #login {
+        #chat {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 100;
+            right: 20px;
+            top: 20px;
+            width: 300px;
+            height: 60vh;
+            background: rgba(0,0,0,0.7);
+            border-radius: 10px;
+            padding: 15px;
+            overflow-y: auto;
         }
 
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--background);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 99;
-        }
-
-        .loader {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .message {
+            margin: 8px 0;
+            padding: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <div id="login">
-        <h1 style="margin-bottom: 2rem;">ConnectHub Pro</h1>
-        <input type="text" placeholder="Enter username" id="username">
-        <button onclick="startConnection()" style="margin-top: 1.5rem;">Connect Now</button>
-    </div>
-
     <div class="video-container">
         <video id="localVideo" autoplay muted playsinline></video>
     </div>
-
     <div class="video-container">
         <video id="remoteVideo" autoplay playsinline></video>
     </div>
 
-    <div class="chat-interface">
-        <div class="chat-box" id="chat"></div>
-        <div class="message-input">
-            <input type="text" id="message" 
-                   placeholder="Type your message..."
-                   oninput="handleTyping()"
-                   onkeydown="handleEnter(event)">
-            <button onclick="sendMessage()">Send</button>
-        </div>
+    <div id="chat"></div>
+
+    <div class="controls">
+        <button onclick="startCall()">Start Call</button>
+        <button onclick="endCall()" style="background: #ff4444;">End Call</button>
     </div>
 
-    <div class="loading-screen" id="loading">
-        <div class="loader"></div>
-        <p style="margin-top: 1.5rem;">Connecting to network...</p>
-    </div>
-
-    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
     <script>
-        // Configuration
-        const CONFIG = {
-            iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' },
-                { 
-                    urls: 'turn:your-turn-server.com:5349',
-                    username: 'your_turn_username',
-                    credential: 'your_turn_password'
+        let pc;
+        let localStream;
+        const signalingServer = new WebSocket('wss://free-signaling-server.herokuapp.com');
+
+        async function startCall() {
+            try {
+                // Get user media
+                localStream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                });
+                document.getElementById('localVideo').srcObject = localStream;
+
+                // Create peer connection
+                pc = new RTCPeerConnection({
+                    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+                });
+
+                // Add local stream to connection
+                localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+
+                // Setup ice candidate exchange
+                pc.onicecandidate = ({ candidate }) => {
+                    if (candidate) {
+                        signalingServer.send(JSON.stringify({
+                            type: 'candidate',
+                            candidate
+                        }));
+                    }
+                };
+
+                // Handle remote stream
+                pc.ontrack = (event) => {
+                    document.getElementById('remoteVideo').srcObject = event.streams[0];
+                };
+
+                // Create data channel for chat
+                const dataChannel = pc.createDataChannel('chat');
+                setupDataChannel(dataChannel);
+
+                // Create offer
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+                signalingServer.send(JSON.stringify({
+                    type: 'offer',
+                    offer: pc.localDescription
+                }));
+            } catch (err) {
+                console.error('Error starting call:', err);
+            }
+        }
+
+        function setupDataChannel(channel) {
+            channel.onopen = () => {
+                console.log('Data channel opened');
+                addMessage('System', 'Chat connected!');
+            };
+
+            channel.onmessage = (event) => {
+                addMessage('Partner', event.data);
+            };
+        }
+
+        signalingServer.onmessage = async (message) => {
+            const data = JSON.parse(message.data);
+            
+            if (!pc) {
+                pc = new RTCPeerConnection({
+                    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+                });
+
+                pc.onicecandidate = ({ candidate }) => {
+                    if (candidate) {
+                        signalingServer.send(JSON.stringify({
+                            type: 'candidate',
+                            candidate
+                        }));
+                    }
+                };
+
+                pc.ontrack = (event) => {
+                    document.getElementById('remoteVideo').srcObject = event.streams[0];
+                };
+
+                pc.ondatachannel = (event) => {
+                    setupDataChannel(event.channel);
+                };
+            }
+
+            try {
+                if (data.offer) {
+                    await pc.setRemoteDescription(data.offer);
+                    const answer = await pc.createAnswer();
+                    await pc.setLocalDescription(answer);
+                    signalingServer.send(JSON.stringify({
+                        type: 'answer',
+                        answer: pc.localDescription
+                    }));
+                } else if (data.answer) {
+                    await pc.setRemoteDescription(data.answer);
+                } else if (data.candidate) {
+                    await pc.addIceCandidate(data.candidate);
                 }
-            ],
-            peerjs: {
-                host: 'your-peerjs-server.com',
-                port: 443,
-                path: '/peerjs',
-                secure: true
+            } catch (err) {
+                console.error('Signaling error:', err);
             }
         };
 
-        let peer;
-        let conn;
-        let localStream;
-        let remoteStream;
+        function addMessage(sender, text) {
+            const chat = document.getElementById('chat');
+            const message = document.createElement('div');
+            message.className = 'message';
+            message.innerHTML = `<strong>${sender}:</strong> ${text}`;
+            chat.appendChild(message);
+            chat.scrollTop = chat.scrollHeight;
+        }
 
-        async function startConnection() {
-            try {
-                const username = document.getElementById('username').value.trim();
-                if (!username) return alert('Please enter a username');
-                
-                document.getElementById('login').style.display = 'none';
-                document.getElementById('loading').style.display = 'flex';
+        function endCall() {
+            if (pc) {
+                pc.close();
+                pc = null;
+            }
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+            }
+            document.getElementById('remoteVideo').srcObject = null;
+            addMessage('System', 'Call ended');
+        }
 
-                // Initialize PeerJS with enhanced configuration
-                peer = new Peer(username, {
-                    ...CONFIG.peerjs,
-                    config: CONFIG
-                });
-
-                // Get media stream with mobile-friendly constraints
-                localStream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 },
-                        facingMode: 'user'
-                    },
-                    audio: {
-                        echoCancellation: true,
-                        noiseSuppression: true,
-                        autoGainControl: true
+        // Chat functionality
+        window.sendMessage = function() {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = 'Type message...';
+            
+            input.onkeypress = (e) => {
+                if (e.key === 'Enter' && input.value) {
+                    const channel = pc?.dataChannels?.chat;
+                    if (channel?.readyState === 'open') {
+                        channel.send(input.value);
+                        addMessage('You', input.value);
                     }
-                });
-
-                document.getElementById('localVideo').srcObject = localStream;
-
-                setupPeerEvents();
-                setupConnectionHandlers();
-
-            } catch (error) {
-                handleError(error);
-            }
-        }
-
-        function setupPeerEvents() {
-            peer.on('open', id => {
-                console.log('Connected with ID:', id);
-                findPartner();
-            });
-
-            peer.on('error', error => {
-                console.error('PeerJS Error:', error);
-                handleError(error);
-            });
-
-            peer.on('call', async call => {
-                try {
-                    call.answer(localStream);
-                    call.on('stream', stream => handleRemoteStream(stream));
-                    call.on('error', error => handleError(error));
-                } catch (error) {
-                    handleError(error);
+                    input.remove();
                 }
-            });
-        }
-
-        async function findPartner() {
-            try {
-                const peers = await peer.listAllPeers();
-                const availablePeers = peers.filter(p => p !== peer.id);
-                
-                if (availablePeers.length > 0) {
-                    const partnerId = availablePeers[Math.floor(Math.random() * availablePeers.length)];
-                    connectToPartner(partnerId);
-                } else {
-                    setTimeout(findPartner, 2000);
-                }
-            } catch (error) {
-                handleError(error);
-            }
-        }
-
-        function connectToPartner(partnerId) {
-            try {
-                // Establish data connection
-                conn = peer.connect(partnerId, {
-                    reliable: true,
-                    serialization: 'json'
-                });
-
-                // Establish media call
-                const call = peer.call(partnerId, localStream);
-                call.on('stream', stream => handleRemoteStream(stream));
-                call.on('error', error => handleError(error));
-
-                // Set up data channel
-                conn.on('data', handleDataMessage);
-                conn.on('open', () => {
-                    console.log('Data channel opened');
-                    sendSystemMessage('Connection established');
-                });
-
-            } catch (error) {
-                handleError(error);
-            }
-        }
-
-        function handleRemoteStream(stream) {
-            remoteStream = stream;
-            document.getElementById('remoteVideo').srcObject = remoteStream;
-            document.getElementById('loading').style.display = 'none';
-        }
-
-        function handleDataMessage(data) {
-            if (data.type === 'message') {
-                appendMessage('Partner', data.content);
-            } else if (data.type === 'typing') {
-                showTypingIndicator(data.isTyping);
-            }
-        }
-
-        function sendMessage() {
-            const message = document.getElementById('message').value.trim();
-            if (!message) return;
-
-            conn.send({
-                type: 'message',
-                content: message,
-                timestamp: new Date().toISOString()
-            });
-
-            appendMessage('You', message);
-            document.getElementById('message').value = '';
-        }
-
-        function handleTyping() {
-            conn.send({
-                type: 'typing',
-                isTyping: document.getElementById('message').value.length > 0
-            });
-        }
-
-        function handleEnter(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
-
-        function appendMessage(sender, content) {
-            const chatBox = document.getElementById('chat');
-            const messageElement = document.createElement('div');
-            messageElement.className = 'message';
-            messageElement.innerHTML = `
-                <strong>${sender}:</strong> ${content}
-                <span class="timestamp">${new Date().toLocaleTimeString()}</span>
-            `;
-            chatBox.appendChild(messageElement);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        function handleError(error) {
-            console.error('Error:', error);
-            alert(`Connection Error: ${error.message}`);
-            location.reload();
-        }
-
-        // Mobile touch handlers
-        document.addEventListener('touchstart', handleTouch, { passive: true });
-        document.addEventListener('touchend', handleTouchEnd);
-
-        function handleTouch() {
-            // Add mobile-specific touch handling if needed
-        }
-
-        function handleTouchEnd() {
-            // Add mobile-specific touch handling if needed
-        }
+            };
+            
+            document.body.appendChild(input);
+            input.focus();
+        };
     </script>
 </body>
 </html>
