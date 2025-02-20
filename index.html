@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quran Player Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
     <style>
-        /* Previous CSS remains the same */
         :root {
             --primary: #10b981;
             --dark: #1e293b;
@@ -37,18 +37,33 @@
             padding: 2rem;
         }
 
-        .controls {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
+        /* Welcome Screen Styles */
+        .welcome-screen {
+            text-align: center;
+            padding: 4rem 2rem;
         }
 
-        select, button {
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            border: 1px solid #ddd;
+        .option-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
         }
 
+        .option-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Surah List Styles */
         .surah-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -68,38 +83,63 @@
             transform: translateY(-5px);
         }
 
-        .surah-detail {
+        /* Prayer Guide Styles */
+        .prayer-guide {
             display: none;
         }
 
-        .surah-content {
+        .step-card {
             background: white;
-            padding: 2rem;
             border-radius: 15px;
-            margin-top: 2rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .arabic-text {
-            font-size: 1.5rem;
-            text-align: right;
-            line-height: 2.5rem;
+        .step-image {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        /* Quiz Section Styles */
+        .quiz-section {
+            display: none;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
             margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .translation {
-            color: #64748b;
-            border-left: 3px solid var(--primary);
-            padding-left: 1rem;
+        .quiz-option {
+            margin: 0.5rem 0;
+            cursor: pointer;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .quiz-option:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Common Components */
+        .controls {
+            display: flex;
+            gap: 1rem;
             margin-bottom: 2rem;
         }
 
-        .player {
-            position: sticky;
-            top: 0;
-            background: white;
-            padding: 1rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
+        select, button {
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            border: 1px solid #ddd;
         }
 
         .back-btn {
@@ -117,20 +157,81 @@
             padding: 1rem;
             text-align: center;
         }
+
+        /* Surah Content Styling */
+        .surah-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .surah-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .surah-meta {
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        .verse-container {
+            margin-bottom: 2rem;
+        }
+
+        .arabic-verse {
+            font-size: 2rem;
+            text-align: right;
+            line-height: 3.5rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Amiri', serif;
+        }
+
+        .translation {
+            font-size: 1.1rem;
+            color: #475569;
+            border-left: 3px solid var(--primary);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Quran Player Pro</h1>
-        <p>Click any Surah to play full chapter</p>
     </header>
 
-    <div class="container">
+    <!-- Welcome Screen -->
+    <div class="container welcome-screen" id="welcomeScreen">
+        <h2>Welcome to Quran Player Pro</h2>
+        <div class="option-cards">
+            <div class="option-card" onclick="showSurahList()">
+                <h3>Surah List</h3>
+                <p>Explore and listen to Quran chapters</p>
+            </div>
+            <div class="option-card" onclick="showPrayerGuide()">
+                <h3>How to Pray</h3>
+                <p>Learn about Islamic prayer steps</p>
+            </div>
+            <div class="option-card" onclick="showQuizSection()">
+                <h3>Islamic Quiz</h3>
+                <p>Test your knowledge about Islam</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Surah List Container -->
+    <div class="container" id="mainContent" style="display: none;">
         <div class="controls">
             <select id="sortSelect" onchange="sortSurahs()">
                 <option value="default">Sort by Default</option>
                 <option value="longest">Longest to Shortest</option>
                 <option value="shortest">Shortest to Longest</option>
+            </select>
+            <select id="languageSelect" onchange="changeLanguage()">
+                <option value="en">English</option>
+                <option value="ar">Arabic</option>
+                <option value="ps">Pashto</option>
             </select>
         </div>
 
@@ -147,12 +248,71 @@
         </div>
     </div>
 
+    <!-- Prayer Guide Section -->
+    <div class="container prayer-guide" id="prayerGuide">
+        <button class="back-btn" onclick="showWelcomeScreen()">← Back to Home</button>
+        <h2>How to Perform Salah</h2>
+        <div id="prayerSteps"></div>
+    </div>
+
+    <!-- Quiz Section -->
+    <div class="container quiz-section" id="quizSection">
+        <button class="back-btn" onclick="showWelcomeScreen()">← Back to Home</button>
+        <h2>Islamic Quiz</h2>
+        <div id="quizContent"></div>
+    </div>
+
     <script>
+        // Quran functionality
         const AUDIO_BASE = "https://server8.mp3quran.net/afs/";
         const API_URL = "https://api.alquran.cloud/v1/surah";
         let originalSurahs = [];
         let currentSurah = null;
 
+        // Prayer Steps Data with working images
+        const PRAYER_STEPS = [
+            {
+                title: "Preparation (Wudu)",
+                description: "Perform ritual ablution: Wash hands, mouth, nose, face, arms, wipe head, and wash feet.",
+                image: "https://samialquran.com/wp-content/uploads/2023/06/wudu-process.jpg"
+            },
+            {
+                title: "Facing Qiblah",
+                description: "Face the direction of the Kaaba in Mecca",
+                image: "https://static.vecteezy.com/system/resources/previews/015/752/759/original/qibla-direction-icon-design-free-vector.jpg"
+            },
+            {
+                title: "Start praying",
+                description: "Raise hands and say 'Allahu Akbar' to begin prayer",
+                image: "https://c8.alamy.com/comp/FYMCTC/complete-set-of-muslim-prayer-position-guide-step-by-step-perform-FYMCTC.jpg"
+            }
+        ];
+
+        // Islamic Quiz Data
+        const ISLAMIC_QUIZ = [
+            {
+                question: "Who is your Lord?",
+                options: ["Allah", "Jesus", "Buddha", "Moses"],
+                answer: "Allah"
+            },
+            {
+                question: "Who is your Prophet?",
+                options: ["Muhammad (PBUH)", "Abraham", "Moses", "Jesus"],
+                answer: "Muhammad (PBUH)"
+            },
+            {
+                question: "What is the first pillar of Islam?",
+                options: ["Shahada", "Salah", "Zakat", "Hajj"],
+                answer: "Shahada"
+            },
+            {
+                question: "Which book was revealed to Prophet Muhammad (PBUH)?",
+                options: ["Quran", "Bible", "Torah", "Psalms"],
+                answer: "Quran"
+            }
+        ];
+
+        // Load Quran Surahs
         async function loadSurahs() {
             try {
                 showLoading();
@@ -169,11 +329,11 @@
             }
         }
 
+        // Render Surahs
         function renderSurahs(surahs) {
             const grid = document.getElementById("surahList");
             grid.innerHTML = surahs.map(surah => `
-                <div class="surah-card" 
-                     onclick="showSurahDetail(${surah.number})">
+                <div class="surah-card" onclick="showSurahDetail(${surah.number})">
                     <h3>${surah.englishName}</h3>
                     <p>${surah.name}</p>
                     <p>Verses: ${surah.numberOfAyahs}</p>
@@ -182,6 +342,7 @@
             `).join("");
         }
 
+        // Show Surah Detail
         async function showSurahDetail(number) {
             try {
                 showLoading();
@@ -213,11 +374,13 @@
                 // Render content
                 const contentDiv = document.getElementById("surahContent");
                 contentDiv.innerHTML = `
-                    <h2>${currentSurah.englishName} (${currentSurah.name})</h2>
-                    <p>${getSurahLength(currentSurah.numberOfAyahs)}</p>
+                    <div class="surah-header">
+                        <h2 class="surah-title">${currentSurah.englishName} (${currentSurah.name})</h2>
+                        <p class="surah-meta">${getSurahLength(currentSurah.numberOfAyahs)}</p>
+                    </div>
                     ${currentSurah.ayahs.map((ayah, index) => `
-                        <div class="verse">
-                            <div class="arabic-text">${ayah.text}</div>
+                        <div class="verse-container">
+                            <div class="arabic-verse">${ayah.text}</div>
                             <div class="translation">${currentSurah.translation.ayahs[index]?.text || 'Translation not available'}</div>
                         </div>
                     `).join("")}
@@ -230,34 +393,68 @@
             }
         }
 
+        // Navigation Functions
+        function showWelcomeScreen() {
+            document.getElementById("welcomeScreen").style.display = "block";
+            document.getElementById("mainContent").style.display = "none";
+            document.getElementById("prayerGuide").style.display = "none";
+            document.getElementById("quizSection").style.display = "none";
+        }
+
         function showSurahList() {
+            document.getElementById("welcomeScreen").style.display = "none";
+            document.getElementById("mainContent").style.display = "block";
+            document.getElementById("prayerGuide").style.display = "none";
+            document.getElementById("quizSection").style.display = "none";
             document.getElementById("surahList").style.display = "grid";
             document.getElementById("surahDetail").style.display = "none";
-            const audioElement = document.getElementById("audioElement");
-            if (audioElement) {
-                audioElement.pause();
-                audioElement.src = "";
-            }
         }
 
-        function sortSurahs() {
-            const sortType = document.getElementById("sortSelect").value;
-            let sortedSurahs = [...originalSurahs];
-
-            switch(sortType) {
-                case 'longest':
-                    sortedSurahs.sort((a, b) => b.numberOfAyahs - a.numberOfAyahs);
-                    break;
-                case 'shortest':
-                    sortedSurahs.sort((a, b) => a.numberOfAyahs - b.numberOfAyahs);
-                    break;
-                default:
-                    sortedSurahs = [...originalSurahs];
-            }
-
-            renderSurahs(sortedSurahs);
+        function showPrayerGuide() {
+            document.getElementById("welcomeScreen").style.display = "none";
+            document.getElementById("mainContent").style.display = "none";
+            document.getElementById("prayerGuide").style.display = "block";
+            document.getElementById("quizSection").style.display = "none";
+            
+            const stepsDiv = document.getElementById("prayerSteps");
+            stepsDiv.innerHTML = PRAYER_STEPS.map((step, index) => `
+                <div class="step-card">
+                    <h3>Step ${index + 1}: ${step.title}</h3>
+                    <img class="step-image" src="${step.image}" alt="${step.title}" onerror="this.style.display='none'">
+                    <p>${step.description}</p>
+                </div>
+            `).join("");
         }
 
+        function showQuizSection() {
+            document.getElementById("welcomeScreen").style.display = "none";
+            document.getElementById("mainContent").style.display = "none";
+            document.getElementById("prayerGuide").style.display = "none";
+            document.getElementById("quizSection").style.display = "block";
+            renderQuiz();
+        }
+
+        // Render Quiz Questions
+        function renderQuiz() {
+            const quizContent = document.getElementById("quizContent");
+            quizContent.innerHTML = ISLAMIC_QUIZ.map((question, index) => `
+                <div class="quiz-card">
+                    <h3>${index + 1}. ${question.question}</h3>
+                    ${question.options.map(option => `
+                        <div class="quiz-option" onclick="checkAnswer('${option}', '${question.answer}')">
+                            ${option}
+                        </div>
+                    `).join("")}
+                </div>
+            `).join("");
+        }
+
+        // Check Quiz Answer
+        function checkAnswer(selected, correct) {
+            alert(selected === correct ? "Correct!" : "Incorrect!");
+        }
+
+        // Utility Functions
         function getSurahLength(verses) {
             if (verses > 150) return 'Long Surah';
             if (verses > 50) return 'Medium Surah';
@@ -281,7 +478,12 @@
         }
 
         // Initialize
-        loadSurahs();
+        function init() {
+            showWelcomeScreen();
+            loadSurahs();
+        }
+
+        init();
     </script>
 </body>
 </html>
