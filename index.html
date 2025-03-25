@@ -158,7 +158,7 @@
                 // Use rotating proxy
                 const proxy = PROXIES[Math.floor(Math.random() * PROXIES.length)];
                 const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&q=${
-                    encodeURIComponent(searchQuery)}&key=${AIzaSyD4yUxN4O77l3d2j-poHLgaMAB5qTIeVKo}&type=video`;
+                    encodeURIComponent(searchQuery)}&key=${AIzaSyD4yUxN4O77l3d2jpoHLgaMAB5qTIeVKo}&type=video`;
                 
                 const response = await fetch(proxy + encodeURIComponent(apiUrl));
                 const data = await response.json();
