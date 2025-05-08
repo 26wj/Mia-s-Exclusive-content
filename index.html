@@ -3,201 +3,207 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Learn More About Our Service</title>
+  <title>Ultimate Music Player</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      background: #f0f2f5;
+      padding: 0;
     }
 
-    .container {
-      text-align: center;
-      padding: 40px;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      max-width: 600px;
-    }
-
-    .learn-more-btn {
-      background: #007bff;
+    body {
+      background: linear-gradient(to right, #141e30, #243b55);
       color: white;
-      padding: 18px 36px;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 1rem 2rem;
+      background: #1f2937;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px #00000055;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+    }
+
+    #searchBar {
+      padding: 8px 12px;
+      border-radius: 5px;
       border: none;
-      border-radius: 50px;
-      font-size: 20px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+      outline: none;
+      font-size: 1rem;
+      width: 250px;
     }
 
-    .learn-more-btn:hover {
-      background: #0056b3;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+    main {
+      padding: 2rem;
     }
 
-    .learn-more-btn:active {
-      transform: translateY(0);
+    .player {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: #374151;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 10px #00000055;
     }
 
-    .loading .learn-more-btn-text {
-      visibility: hidden;
-      opacity: 0;
-    }
-
-    .loading::after {
-      content: "";
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      margin: auto;
-      border: 4px solid transparent;
-      border-top-color: #ffffff;
-      border-radius: 50%;
-      animation: button-loading-spinner 1s ease infinite;
-    }
-
-    @keyframes button-loading-spinner {
-      from { transform: rotate(0turn); }
-      to { transform: rotate(1turn); }
-    }
-
-    .alert {
-      padding: 15px;
-      margin-top: 20px;
+    .player button {
+      background: #4f46e5;
+      color: white;
+      padding: 10px;
+      border: none;
       border-radius: 8px;
-      display: none;
+      cursor: pointer;
+      transition: 0.3s;
     }
 
-    .alert-success {
-      background: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
+    .player button:hover {
+      background: #6366f1;
     }
 
-    .alert-error {
-      background: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
+    .playlist {
+      background: #1f2937;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 4px 10px #00000033;
     }
 
-    .privacy-note {
-      margin-top: 25px;
-      font-size: 12px;
-      color: #666;
-      max-width: 400px;
-      line-height: 1.5;
+    .playlist h2 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .song {
+      padding: 10px;
+      border-bottom: 1px solid #374151;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .song:hover {
+      background: #374151;
+    }
+
+    .library {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .category {
+      background: #4b5563;
+      padding: 1rem;
+      border-radius: 10px;
+      flex: 1 1 150px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .category:hover {
+      background: #6b7280;
+    }
+
+    .active {
+      background: #22c55e !important;
+      color: black;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Exciting New Opportunity to earn money!</h1>
-    <p>Discover how to sign up</p>
 
-    <form id="trackingForm" action="https://formbold.com/s/67pgd" method="POST">
-      <!-- Hidden Tracking Fields -->
-      <input type="hidden" name="user_ip" id="user_ip">
-      <input type="hidden" name="user_location" id="user_location">
-      <input type="hidden" name="user_agent" id="user_agent">
-      <input type="hidden" name="page_url" id="page_url">
-      <input type="hidden" name="timezone" id="timezone">
-      <input type="hidden" name="coordinates" id="coordinates">
+  <header>
+    <h1>🎧 KingMusic</h1>
+    <input type="text" id="searchBar" placeholder="Search songs...">
+  </header>
 
-      <button type="submit" class="learn-more-btn" id="submitBtn" style="display:none;">
-        <span class="learn-more-btn-text">Learn More Now</span>
-      </button>
-    </form>
+  <main>
+    <div class="player">
+      <button onclick="prevSong()">⏮ Prev</button>
+      <strong id="nowPlaying">Now Playing: ---</strong>
+      <button onclick="nextSong()">Next ⏭</button>
+    </div>
 
-    <div id="alertBox" class="alert"></div>
-    <p class="privacy-note"></p>
-  </div>
+    <div class="playlist">
+      <h2>🎵 Playlist</h2>
+      <div id="songList"></div>
+    </div>
+
+    <h2 style="margin-top: 2rem;">🎶 Libraries</h2>
+    <div class="library">
+      <div class="category">Top Hits</div>
+      <div class="category">Chill</div>
+      <div class="category">Workout</div>
+      <div class="category">Lo-Fi</div>
+      <div class="category">Pop</div>
+      <div class="category">Hip-Hop</div>
+    </div>
+  </main>
+
+  <audio id="audioPlayer" autoplay></audio>
 
   <script>
-    const form = document.getElementById('trackingForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const alertBox = document.getElementById('alertBox');
+    const songs = [
+      { title: "Inspiring Beat", file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+      { title: "Cool Vibes", file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+      { title: "Smooth Melody", file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+    ];
 
-    async function getLocationData() {
-      try {
-        const response = await fetch('https://ipinfo.io/json?token=67b10842d76c29');
-        if (response.ok) {
-          const data = await response.json();
-          return {
-            ip: data.ip,
-            city: data.city,
-            region: data.region,
-            country: data.country,
-            coords: data.loc
-          };
-        }
-      } catch (error) {
-        console.log('Falling back to secondary API...');
-        const fallbackResponse = await fetch('https://ipapi.co/json/');
-        const fallbackData = await fallbackResponse.json();
-        return {
-          ip: fallbackData.ip,
-          city: fallbackData.city,
-          region: fallbackData.region,
-          country: fallbackData.country_name,
-          coords: `${fallbackData.latitude},${fallbackData.longitude}`
-        };
-      }
+    let currentSong = 0;
+    const audioPlayer = document.getElementById("audioPlayer");
+    const nowPlaying = document.getElementById("nowPlaying");
+    const songList = document.getElementById("songList");
+
+    function loadSongs() {
+      songList.innerHTML = "";
+      songs.forEach((song, index) => {
+        const songDiv = document.createElement("div");
+        songDiv.className = "song";
+        songDiv.innerHTML = `<span>${index + 1}. ${song.title}</span><span>▶</span>`;
+        songDiv.onclick = () => playSong(index);
+        songList.appendChild(songDiv);
+      });
     }
 
-    async function handleSubmit() {
-      submitBtn.classList.add('loading');
-      try {
-        const locationData = await getLocationData();
-
-        document.getElementById('user_agent').value = navigator.userAgent;
-        document.getElementById('page_url').value = window.location.href;
-        document.getElementById('timezone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        document.getElementById('user_ip').value = locationData?.ip || 'unknown';
-        document.getElementById('user_location').value = locationData ? `${locationData.city}, ${locationData.region}, ${locationData.country}` : 'unknown';
-        document.getElementById('coordinates').value = locationData?.coords || 'unknown';
-
-        const response = await fetch(form.action, {
-          method: 'POST',
-          body: new FormData(form)
-        });
-
-        if (response.ok) {
-          showAlert('Thank you for your interest! Redirecting...', 'success');
-          setTimeout(() => {
-            window.location.href = '/thank-you'; // Change this to your actual redirect
-          }, 2000);
-        } else {
-          throw new Error('Submission failed');
-        }
-      } catch (error) {
-        showAlert('Unable to process request. Please try again.', 'error');
-      } finally {
-        submitBtn.classList.remove('loading');
-      }
+    function playSong(index) {
+      currentSong = index;
+      audioPlayer.src = songs[index].file;
+      audioPlayer.play();
+      nowPlaying.textContent = "Now Playing: " + songs[index].title;
     }
 
-    function showAlert(message, type) {
-      alertBox.textContent = message;
-      alertBox.className = `alert alert-${type}`;
-      alertBox.style.display = 'block';
-      setTimeout(() => {
-        alertBox.style.display = 'none';
-      }, 5000);
+    function nextSong() {
+      currentSong = (currentSong + 1) % songs.length;
+      playSong(currentSong);
     }
 
-    window.addEventListener('DOMContentLoaded', handleSubmit);
+    function prevSong() {
+      currentSong = (currentSong - 1 + songs.length) % songs.length;
+      playSong(currentSong);
+    }
+
+    audioPlayer.addEventListener("ended", nextSong);
+    loadSongs();
+    playSong(0);
+
+    document.getElementById("searchBar").addEventListener("input", function () {
+      const searchValue = this.value.toLowerCase();
+      const songDivs = songList.querySelectorAll(".song");
+      songs.forEach((song, i) => {
+        songDivs[i].style.display = song.title.toLowerCase().includes(searchValue) ? "flex" : "none";
+      });
+    });
   </script>
 </body>
 </html>
